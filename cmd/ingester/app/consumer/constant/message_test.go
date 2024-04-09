@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package consumer
+package constant
 
 import (
 	"testing"
@@ -23,6 +23,12 @@ import (
 
 func TestSaramaMessageWrapper(t *testing.T) {
 	saramaMessage := &sarama.ConsumerMessage{
+		Headers: []*sarama.RecordHeader{
+			{
+				Key:   []byte("some key"),
+				Value: []byte("some value"),
+			},
+		},
 		Key:       []byte("some key"),
 		Value:     []byte("some value"),
 		Topic:     "some topic",
@@ -30,11 +36,12 @@ func TestSaramaMessageWrapper(t *testing.T) {
 		Offset:    1942,
 	}
 
-	wrappedMessage := saramaMessageWrapper{saramaMessage}
+	wrappedMessage := SaramaMessageWrapper{saramaMessage}
 
 	assert.Equal(t, saramaMessage.Key, wrappedMessage.Key())
 	assert.Equal(t, saramaMessage.Value, wrappedMessage.Value())
 	assert.Equal(t, saramaMessage.Topic, wrappedMessage.Topic())
 	assert.Equal(t, saramaMessage.Partition, wrappedMessage.Partition())
 	assert.Equal(t, saramaMessage.Offset, wrappedMessage.Offset())
+	assert.Equal(t, saramaMessage.Headers, wrappedMessage.Headers())
 }

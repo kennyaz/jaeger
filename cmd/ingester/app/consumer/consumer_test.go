@@ -17,6 +17,7 @@ package consumer
 import (
 	"errors"
 	"fmt"
+	"github.com/jaegertracing/jaeger/cmd/ingester/app/consumer/constant"
 	"sync"
 	"testing"
 	"time"
@@ -127,7 +128,7 @@ func TestSaramaConsumerWrapper_start_Messages(t *testing.T) {
 	isProcessed := sync.WaitGroup{}
 	isProcessed.Add(1)
 	mp := &pmocks.SpanProcessor{}
-	mp.On("Process", saramaMessageWrapper{msg}).Return(func(msg processor.Message) error {
+	mp.On("Process", constant.SaramaMessageWrapper{msg}).Return(func(msg processor.Message) error {
 		isProcessed.Done()
 		return nil
 	})

@@ -17,6 +17,7 @@ package processor
 import (
 	"context"
 	"fmt"
+	"github.com/jaegertracing/jaeger/cmd/ingester/app/consumer/constant"
 	"io"
 
 	"github.com/jaegertracing/jaeger/cmd/collector/app/sanitizer"
@@ -62,6 +63,9 @@ func NewSpanProcessor(params SpanProcessorParams) *KafkaSpanProcessor {
 
 // Process unmarshals and writes a single kafka message
 func (s KafkaSpanProcessor) Process(message Message) error {
+	if _, ok := message.(constant.Message); ok {
+		fmt.Println("Hello")
+	}
 	span, err := s.unmarshaller.Unmarshal(message.Value())
 	if err != nil {
 		return fmt.Errorf("cannot unmarshall byte array into span: %w", err)

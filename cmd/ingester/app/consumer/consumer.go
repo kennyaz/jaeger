@@ -15,6 +15,7 @@
 package consumer
 
 import (
+	"github.com/jaegertracing/jaeger/cmd/ingester/app/consumer/constant"
 	"sync"
 	"time"
 
@@ -146,7 +147,7 @@ func (c *Consumer) handleMessages(pc sc.PartitionConsumer) {
 				defer msgProcessor.Close()
 			}
 
-			err := msgProcessor.Process(saramaMessageWrapper{msg})
+			err := msgProcessor.Process(constant.SaramaMessageWrapper{msg})
 			if err != nil {
 				c.logger.Error("Failed to process a Kafka message", zap.Error(err), zap.Int32("partition", msg.Partition), zap.Int64("offset", msg.Offset))
 			}

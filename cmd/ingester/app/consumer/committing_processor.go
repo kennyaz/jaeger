@@ -16,6 +16,7 @@ package consumer
 
 import (
 	"errors"
+	"github.com/jaegertracing/jaeger/cmd/ingester/app/consumer/constant"
 	"io"
 
 	"github.com/jaegertracing/jaeger/cmd/ingester/app/processor"
@@ -40,7 +41,7 @@ func NewCommittingProcessor(processor processor.SpanProcessor, marker offsetMark
 }
 
 func (d *comittingProcessor) Process(message processor.Message) error {
-	if msg, ok := message.(Message); ok {
+	if msg, ok := message.(constant.Message); ok {
 		err := d.processor.Process(message)
 		if err == nil {
 			d.marker.MarkOffset(msg.Offset())

@@ -1,3 +1,7 @@
+package constant
+
+import "github.com/Shopify/sarama"
+
 // Copyright (c) 2018 The Jaeger Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +16,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package consumer
-
-import (
-	"github.com/Shopify/sarama"
-)
-
 // Message contains the parts of a sarama ConsumerMessage that we care about.
 type Message interface {
 	Key() []byte
@@ -25,28 +23,33 @@ type Message interface {
 	Topic() string
 	Partition() int32
 	Offset() int64
+	Headers() []*sarama.RecordHeader
 }
 
-type saramaMessageWrapper struct {
+type SaramaMessageWrapper struct {
 	*sarama.ConsumerMessage
 }
 
-func (m saramaMessageWrapper) Key() []byte {
+func (m SaramaMessageWrapper) Key() []byte {
 	return m.ConsumerMessage.Key
 }
 
-func (m saramaMessageWrapper) Value() []byte {
+func (m SaramaMessageWrapper) Value() []byte {
 	return m.ConsumerMessage.Value
 }
 
-func (m saramaMessageWrapper) Topic() string {
+func (m SaramaMessageWrapper) Topic() string {
 	return m.ConsumerMessage.Topic
 }
 
-func (m saramaMessageWrapper) Partition() int32 {
+func (m SaramaMessageWrapper) Partition() int32 {
 	return m.ConsumerMessage.Partition
 }
 
-func (m saramaMessageWrapper) Offset() int64 {
+func (m SaramaMessageWrapper) Offset() int64 {
 	return m.ConsumerMessage.Offset
+}
+
+func (m SaramaMessageWrapper) Headers() []*sarama.RecordHeader {
+	return m.ConsumerMessage.Headers
 }
