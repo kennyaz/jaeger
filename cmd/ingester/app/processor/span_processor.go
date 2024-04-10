@@ -17,10 +17,10 @@ package processor
 import (
 	"context"
 	"fmt"
-	"github.com/jaegertracing/jaeger/cmd/ingester/app/consumer/constant"
 	"io"
 
 	"github.com/jaegertracing/jaeger/cmd/collector/app/sanitizer"
+	"github.com/jaegertracing/jaeger/cmd/ingester/app/consumer/constant"
 	"github.com/jaegertracing/jaeger/plugin/storage/kafka"
 	"github.com/jaegertracing/jaeger/storage/spanstore"
 )

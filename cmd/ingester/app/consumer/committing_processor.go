@@ -16,9 +16,9 @@ package consumer
 
 import (
 	"errors"
-	"github.com/jaegertracing/jaeger/cmd/ingester/app/consumer/constant"
 	"io"
 
+	"github.com/jaegertracing/jaeger/cmd/ingester/app/consumer/constant"
 	"github.com/jaegertracing/jaeger/cmd/ingester/app/processor"
 )
 

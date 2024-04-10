@@ -15,7 +15,6 @@
 package consumer
 
 import (
-	"github.com/jaegertracing/jaeger/cmd/ingester/app/consumer/constant"
 	"sync"
 	"time"
 
@@ -23,6 +22,7 @@ import (
 	sc "github.com/bsm/sarama-cluster"
 	"go.uber.org/zap"
 
+	"github.com/jaegertracing/jaeger/cmd/ingester/app/consumer/constant"
 	"github.com/jaegertracing/jaeger/cmd/ingester/app/processor"
 	"github.com/jaegertracing/jaeger/pkg/kafka/consumer"
 	"github.com/jaegertracing/jaeger/pkg/metrics"
