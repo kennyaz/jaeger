@@ -63,14 +63,22 @@ func NewSpanProcessor(params SpanProcessorParams) *KafkaSpanProcessor {
 
 // Process unmarshals and writes a single kafka message
 func (s KafkaSpanProcessor) Process(message Message) error {
-	if _, ok := message.(constant.Message); ok {
-		fmt.Println("Hello")
-	}
 	span, err := s.unmarshaller.Unmarshal(message.Value())
 	if err != nil {
 		return fmt.Errorf("cannot unmarshall byte array into span: %w", err)
 	}
 
-	// TODO context should be propagated from upstream components
-	return s.writer.WriteSpan(context.TODO(), s.sanitizer(span))
+	ctx := extractContextFromHeader(message)
+	return s.writer.WriteSpan(ctx, s.sanitizer(span))
+}
+
+func extractContextFromHeader(msg Message) context.Context {
+	if msg, ok := msg.(constant.Message); ok {
+		ctx := context.Background()
+		for _, header := range msg.Headers() {
+			ctx = context.WithValue(ctx, string(header.Key), string(header.Value))
+		}
+		return ctx
+	}
+	return context.Background()
 }

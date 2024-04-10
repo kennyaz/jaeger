@@ -17,6 +17,7 @@ package processor
 import (
 	"context"
 	"errors"
+	"github.com/Shopify/sarama"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -43,13 +44,15 @@ func TestSpanProcessor_Process(t *testing.T) {
 
 	message := &cmocks.Message{}
 	data := []byte("irrelevant, mock unmarshaller should return the span")
+	recordHeader := []*sarama.RecordHeader{}
 	span := &model.Span{
 		Process: nil, // we want to make sure sanitizers will fix this data issue.
 	}
 
 	message.On("Value").Return(data)
+	message.On("Headers").Return(recordHeader)
 	mockUnmarshaller.On("Unmarshal", data).Return(span, nil)
-	mockWriter.On("WriteSpan", context.TODO(), span).
+	mockWriter.On("WriteSpan", context.Background(), span).
 		Return(nil).
 		Run(func(args mock.Arguments) {
 			span := args[1].(*model.Span)
@@ -81,4 +84,20 @@ func TestSpanProcessor_ProcessError(t *testing.T) {
 	message.AssertExpectations(t)
 	writer.AssertExpectations(t)
 	writer.AssertNotCalled(t, "WriteSpan")
+}
+
+func TestExtractContextFromHeader(t *testing.T) {
+	message := &cmocks.Message{}
+	data := []*sarama.RecordHeader{
+		{
+			Key:   []byte("trace-id"),
+			Value: []byte("test"),
+		},
+	}
+
+	message.On("Headers").Return(data)
+	ctx := extractContextFromHeader(message)
+	value, ok := ctx.Value("trace-id").(string)
+	assert.True(t, ok)
+	assert.Equal(t, value, "test")
 }
