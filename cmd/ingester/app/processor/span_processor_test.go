@@ -71,7 +71,7 @@ func TestSpanProcessor_ProcessError(t *testing.T) {
 	}
 
 	message := &cmocks.Message{}
-	data := []byte("police")
+	data := []byte("police2")
 
 	message.On("Value").Return(data)
 	unmarshallerMock.On("Unmarshal", data).Return(nil, errors.New("moocow"))
